@@ -1,14 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import useForm from '../hooks/form.js';
-import { Button, Card, Elevation, Slider } from "@blueprintjs/core";
+import { Button, Card, Elevation, Callout } from "@blueprintjs/core";
 
 import { v4 as uuid } from 'uuid';
+import { SettingsContext } from '../context/Settings'
 
 const ToDo = () => {
 
+  const settings = useContext(SettingsContext);
   const [list, setList] = useState([]);
   const [incomplete, setIncomplete] = useState([]);
+  const [startIndex, setStartIndex] = useState(0);
+  const [endIndex, setEndIndex] = useState(settings.itemNumber);
   const { handleChange, handleSubmit } = useForm(addItem);
+
 
   function addItem(item) {
     console.log(item);
@@ -16,6 +21,7 @@ const ToDo = () => {
     item.complete = false;
     setList([...list, item]);
   }
+
 
   function deleteItem(id) {
     const items = list.filter(item => item.id !== id);
@@ -36,18 +42,38 @@ const ToDo = () => {
   }
 
   useEffect(() => {
+
     let incompleteCount = list.filter(item => !item.complete).length;
     setIncomplete(incompleteCount);
     document.title = `To Do List: ${incomplete}`;
   }, [list]);
 
+  useEffect(() => {
+    addItem({
+      text: 'Item 1',
+      assignee: 'Assignee 1',
+      difficulty: 3,
+    });
+  }, []);
+
+  function pagination() {
+    let result = list.slice(startIndex, endIndex);
+    return result;
+  }
+
+  function next() {
+    setStartIndex(startIndex + settings.itemNumber);
+    setEndIndex(endIndex + settings.itemNumber);
+  }
+
+
   return (
     <>
-      <Card interactive={false} elevation={Elevation.TWO}>
+      <Callout interactive={false} elevation={Elevation.TWO}>
         <header>
           <h1>To Do List: {incomplete} items pending</h1>
         </header>
-      </Card>
+      </Callout>
 
       <Card interactive={false} elevation={Elevation.ONE}>
         <form onSubmit={handleSubmit}>
@@ -79,18 +105,17 @@ const ToDo = () => {
       </Card>
 
 
-      {
-        list.map(item => (
-          <div key={item.id}>
-            <p>{item.text}</p>
-            <p><small>Assigned to: {item.assignee}</small></p>
-            <p><small>Difficulty: {item.difficulty}</small></p>
-            <div onClick={() => toggleComplete(item.id)}>Complete: {item.complete.toString()}</div>
-            <hr />
-          </div>
-        ))
-      }
 
+      {pagination().map(item => (
+        <div key={item.id}>
+          <p>{item.text}</p>
+          <p><small>Assigned to: {item.assignee}</small></p>
+          <p><small>Difficulty: {item.difficulty}</small></p>
+          <Button onClick={() => toggleComplete(item.id)}>Complete: {item.complete.toString()}</Button>
+          <hr />
+        </div>
+      ))}
+      <Button onClick={next}>Next</Button>
     </>
   );
 };
