@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import useForm from '../hooks/form.js';
-import { Button, Card, Elevation, Callout, Checkbox } from "@blueprintjs/core";
+import { Button, Card, Elevation, Callout, Checkbox, Switch } from "@blueprintjs/core";
 import { v4 as uuid } from 'uuid';
 import { SettingsContext } from '../context/Settings'
 
@@ -64,16 +64,7 @@ const ToDo = () => {
 
   // === === hide completed todo's === === //
   function handleHide() {
-    settings.setHide(true);
-  }
-
-  // === === hide === === //
-  function hide() {
-    if (item.complete === true) {
-      return
-      // let result = list.slice(startIndex, endIndex);
-      // return result;
-    }
+    settings.setHide(!settings.hide);
   }
 
 
@@ -85,6 +76,7 @@ const ToDo = () => {
   // === === pagination === === //
   function pagination() {
     let result = list.slice(startIndex, endIndex);
+    console.log('😏', result);
     return result;
   }
 
@@ -144,24 +136,10 @@ const ToDo = () => {
 
 
           <label>
-            <Checkbox onClick={handleHide}>
+            <Switch onChange={handleHide}>
               Hide Completed
-            </Checkbox>
+            </Switch>
           </label>
-
-          {/* <label>
-            To Do Items Per Page:
-            <div>
-              <select onChange={handleChange}>
-                <option selected>Choose items per page</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-                <option value="4">Four</option>
-                <option value="5">Five</option>
-              </select>
-            </div>
-          </label> */}
 
         </form>
       </Card>
@@ -169,15 +147,18 @@ const ToDo = () => {
 
 
       {
-        pagination().map(item => (
-          <div key={item.id}>
-            <p>{item.text}</p>
-            <p><small>Assigned to: {item.assignee}</small></p>
-            <p><small>Difficulty: {item.difficulty}</small></p>
-            <Button onClick={() => toggleComplete(item.id)}>Complete: {item.complete.toString()}</Button>
-            <hr />
-          </div>
-        ))
+        pagination().map(item => {
+          if (settings.hide === false || item.complete === false) {
+            // if (settings.setHide) {
+            return <div key={item.id}>
+              <p>{item.text}</p>
+              <p><small>Assigned to: {item.assignee}</small></p>
+              <p><small>Difficulty: {item.difficulty}</small></p>
+              <Button onClick={() => toggleComplete(item.id)}>Complete: {item.complete.toString()}</Button>
+              <hr />
+            </div>
+          }
+        })
       }
       <Button intent="success" onClick={previous}>Previous</Button>
       <Button intent="success" onClick={next}>Next</Button>
