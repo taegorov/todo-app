@@ -3,6 +3,8 @@ import useForm from '../hooks/form.js';
 import { Button, Card, Elevation, Callout, Checkbox, Switch } from "@blueprintjs/core";
 import { v4 as uuid } from 'uuid';
 import { SettingsContext } from '../context/Settings'
+import { ThemeContext } from '../context/Theme.js';
+
 
 
 const ToDo = () => {
@@ -62,6 +64,7 @@ const ToDo = () => {
   }, [settings.itemNumber]);
 
 
+
   // === === hide completed todo's === === //
   function handleHide() {
     settings.setHide(!settings.hide);
@@ -92,17 +95,23 @@ const ToDo = () => {
     setEndIndex(endIndex - settings.itemNumber);
   }
 
+  // === === theme defined here === === //
+  const theme = useContext(ThemeContext);
 
+
+
+  // === === Rendering here === === //
   return (
-    <>
+
+    <div class="main-page">
       <Callout interactive={false} elevation={Elevation.TWO}>
         <header>
           <h1>To Do List: {incomplete} items pending</h1>
         </header>
       </Callout>
 
-      <Card interactive={true} elevation={Elevation.TWO}>
-        <form onSubmit={handleSubmit}>
+      <Card id="card" interactive={true} elevation={Elevation.TWO}>
+        <form class="form" onSubmit={handleSubmit}>
 
           <h2>Add To Do Item:</h2>
 
@@ -141,6 +150,12 @@ const ToDo = () => {
             </Switch>
           </label>
 
+          <label>
+            <Switch onChange={theme.toggleMode}>
+              🌞 Day Mode?
+            </Switch>
+          </label>
+
         </form>
       </Card>
 
@@ -150,7 +165,7 @@ const ToDo = () => {
         pagination().map(item => {
           if (settings.hide === false || item.complete === false) {
             // if (settings.setHide) {
-            return <div key={item.id}>
+            return <div class="render" key={item.id}>
               <p>{item.text}</p>
               <p><small>Assigned to: {item.assignee}</small></p>
               <p><small>Difficulty: {item.difficulty}</small></p>
@@ -160,9 +175,9 @@ const ToDo = () => {
           }
         })
       }
-      <Button intent="success" onClick={previous}>Previous</Button>
-      <Button intent="success" onClick={next}>Next</Button>
-    </>
+      <Button intent="success" icon="arrow-left" onClick={previous}>Previous</Button>
+      <Button intent="success" rightIcon="arrow-right" onClick={next}>Next</Button>
+    </div>
   );
 };
 
