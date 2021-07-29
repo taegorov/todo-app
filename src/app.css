@@ -1,0 +1,38 @@
+body {
+  background-color: rgb(53, 53, 53);
+}
+
+/* .main-page{
+  margin: 1em;
+  
+} */
+
+/* .render {
+  margin: 2em;
+} */
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin: .5em;
+}
+
+.dark {
+  background-color: rgb(71, 98, 114);
+  color: rgb(255, 255, 255)
+}
+
+.dark #card {
+  background-color: rgb(71, 79, 88);
+}
+
+.light {
+  background-color: rgb(227, 236, 255);
+}
+
+.light #card {
+  background-color: rgb(219, 244, 255);
+}
