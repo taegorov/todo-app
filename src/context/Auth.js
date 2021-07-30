@@ -9,26 +9,26 @@ export const AuthContext = React.createContext();
 
 
 
-const testUsers = [
-  {
-    password: 'password',
-    name: 'Administrator',
-    role: 'admin',
-    capabilities: ['create', 'read', 'update', 'delete']
-  },
-  {
-    password: 'password',
-    name: 'Editor',
-    role: 'editor',
-    capabilities: ['read', 'update']
-  },
-  {
-    password: 'password',
-    name: 'Writer',
-    role: 'writer',
-    capabilities: ['create']
-  }
-]
+// const testUsers = [
+//   {
+//     password: 'password',
+//     name: 'Administrator',
+//     role: 'admin',
+//     capabilities: ['create', 'read', 'update', 'delete']
+//   },
+//   {
+//     password: 'password',
+//     name: 'Editor',
+//     role: 'editor',
+//     capabilities: ['read', 'update']
+//   },
+//   {
+//     password: 'password',
+//     name: 'Writer',
+//     role: 'writer',
+//     capabilities: ['create']
+//   }
+// ]
 
 
 export default class AuthProvider extends React.Component {
@@ -43,34 +43,24 @@ export default class AuthProvider extends React.Component {
     }
   }
 
-  // valildating a username and password, setting a user if found and creating a token
-  login = (username, password) => {
+  // validating a username and password, setting a user if found and creating a token
+  login = async (username, password) => {
 
     // search our testUser and return a valid user.
-    let validUser = {};
-    let token = null;
-    testUsers.forEach(user => {
-      if (user.name === username && user.password === password) {
-        validUser = user
-      }
+    let authString = `${username}:${password}`
+    let response = await fetch('http://localhost:3001/signin', {
+      headers: {
+        authorization: `basic ${btoa(authString)}`
+      },
+      method: 'POST'
     });
-    if (validUser) {
-      token = jwt.sign(validUser, 'secretstring');
+    let data = await response.json();
+    console.log('🦅', data);
+    // let token = null;
 
-      // here is where we can potentially store your selected theme in cookies!
-      // token = {
-      //   validUser: jwt.sign(validUser, 'secretstring'),
-      //   selectedTheme: 
-      // }
-
-      // if you can get this console log figured out, you can store it:
-      // const theme = useContext(ThemeContext);
-      // console.log('🤶', theme);
-
-    }
-    cookie.save('token', token);
+    cookie.save('token', data.token);
     // cookie.save('token', token);
-    this.setState({ isAuthenticated: true, user: validUser });
+    this.setState({ isAuthenticated: true, user: data.user });
   }
 
   logout = () => {

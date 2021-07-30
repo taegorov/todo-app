@@ -17,13 +17,27 @@ const ToDo = () => {
   const { handleChange, handleSubmit } = useForm(addItem);
 
 
-
+  // below is using in memory state
   function addItem(item) {
     console.log(item);
     item.id = uuid();
     item.complete = false;
     setList([...list, item]);
   }
+
+  // // below is talking to the server
+  // async function addItem(item) {
+  //   let response = await fetch('http://localhost:3001/todo', {
+  //     body: {},
+  //     method: 'POST'
+  //   });
+  //   setList([...list, item]);
+  //   console.log('🥩 response is: ', response)
+  //   // console.log(item);
+  //   // item.id = uuid();
+  //   // item.complete = false;
+  //   // setList([...list, item]);
+  // }
 
 
   function deleteItem(id) {
@@ -103,15 +117,15 @@ const ToDo = () => {
   // === === Rendering here === === //
   return (
 
-    <div class="main-page">
-      <Callout interactive={false} elevation={Elevation.TWO}>
+    <div className="main-page">
+      <Callout elevation={Elevation.TWO}>
         <header>
           <h1>To Do List: {incomplete} items pending</h1>
         </header>
       </Callout>
 
       <Card id="card" interactive={true} elevation={Elevation.TWO}>
-        <form class="form" onSubmit={handleSubmit}>
+        <form className="form" onSubmit={handleSubmit}>
 
           <h2>Add To Do Item:</h2>
 
@@ -165,11 +179,12 @@ const ToDo = () => {
         pagination().map(item => {
           if (settings.hide === false || item.complete === false) {
             // if (settings.setHide) {
-            return <div class="render" key={item.id}>
+            return <div className="render" key={item.id}>
               <p>{item.text}</p>
               <p><small>Assigned to: {item.assignee}</small></p>
               <p><small>Difficulty: {item.difficulty}</small></p>
               <Button onClick={() => toggleComplete(item.id)}>Complete: {item.complete.toString()}</Button>
+              <Button intent="danger" onClick={() => deleteItem(item.id)}>Delete</Button>
               <hr />
             </div>
           }
