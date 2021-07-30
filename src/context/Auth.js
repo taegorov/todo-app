@@ -48,7 +48,7 @@ export default class AuthProvider extends React.Component {
 
     // search our testUser and return a valid user.
     let authString = `${username}:${password}`
-    let response = await fetch('http://localhost:3001/signin', {
+    let response = await fetch('https://timegorov-basic-api-server.herokuapp.com/signin', {
       headers: {
         authorization: `basic ${btoa(authString)}`
       },
