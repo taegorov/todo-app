@@ -38,6 +38,21 @@ In Phase 3, we'd like to extend the functionality of the application by requirin
     As a user, I want to ensure that only fellow users that are allowed to "delete", based on their user type, can delete new To Do Items
 
 
+## Phase 4 Requirements
+
+Technical requirements for the core application are unchanged from the prior phases, with the following additions and notes:
+
+    Alter the Add, Toggle Complete, and Delete functions within your to do application to use your API instead of in memory state
+        Fetch the current list of items from the database on application start
+        Whenever you add/update/delete an item, refresh the state so the user can instantly see the change
+            Consider: Do you re-fetch from the server every time you make a change?
+                If so, how?
+                If not, how will you stay in sync?
+
+    Alter the Login Context to use the server to login users instead of our mock users list
+        Be sure to store the token in state as well as in a cookie so you can reference it later
+
+
 ## UML
 
 ![UML](assets/todoUML.jpg)
