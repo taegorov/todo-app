@@ -20,8 +20,8 @@ function Login() {
       {isAuthenticated
         ? <Button onClick={logout}>Logout</Button>
         : <form onSubmit={handleSubmit}>
-          <InputGroup name="username" id="username" placeholder="username" />
-          <InputGroup name="password" id="password" placeholder="password" />
+          <InputGroup name="username" id="username" placeholder="please type in 'timbo' " />
+          <InputGroup name="password" id="password" placeholder="please type in 'password' " />
           <Button intent="success" type='submit' large="true">login</Button>
         </form>
       }
